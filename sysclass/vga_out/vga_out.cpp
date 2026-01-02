@@ -93,4 +93,16 @@ namespace sk {
 		BUFFER[i].uc = (unsigned char)entry;
 	}
 
+	
+	void vga_out::refresh() {
+		const position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
+		for(position i = position();
+				i < CONDITION;
+				i++) {
+			BUFFER[i].color = color;
+		}
+		
+		for(size_t i = 0; TTY_BUFFER_SIZE> i; i++)
+			this.putchar(characterBuffer[i]);
+	}
 }

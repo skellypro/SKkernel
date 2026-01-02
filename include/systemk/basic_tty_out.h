@@ -20,18 +20,21 @@ namespace sk {
 	public:
 
 		// Character output
-		virtual void putchar(register char) = 0;
-		virtual void putchar(register unsigned char) = 0;
+		virtual void putchar(char) = 0;
+		virtual void putchar(unsigned char) = 0;
 
 		// String output
-		virtual void puts(register const char *) = 0;
+		virtual void puts(const char *) = 0;
 
 		virtual void backSpace(void) = 0;
 
 		//buffer manipulation
 		virtual void clear(void) = 0;	// clear output buffer, put position to top y and x
+		
+		size_t TTY_BUFFER_SIZE = 100;
+		char characterBuffer[TTY_BUFFER_SIZE];
 	private:
-		virtual bool isNewLine(register char	c) = 0;
+		virtual bool isNewLine(char	c) = 0;
 	};
 
 }

@@ -38,6 +38,7 @@ namespace sk{
 
 		//buffer manipulation
 		void clear(void);	// clear output buffer, put position to top y and x
+		void refresh_color();
 
 		//position & nextPosition(position * p);
 	private:

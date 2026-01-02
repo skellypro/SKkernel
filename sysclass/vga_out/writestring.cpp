@@ -24,7 +24,7 @@ namespace sk {
 
 	void vga_out::write(register const char* data, size_t size) {
 		for (register size_t i = 0; i < size; i++)
-			putchar(data[i]);
+			this.putchar(data[i]);
 	}
 
 	void vga_out::writestring(register const char* data) {

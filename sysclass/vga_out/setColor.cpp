@@ -16,9 +16,9 @@ namespace sk {
 	 *
 	 * This functions refreshes the color of the terminal
 	 */
-	void vga_out::refresh() {
-		const register position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
-		for(register position i = position();
+	void vga_out::refresh_color() {
+		const position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
+		for(position i = position();
 				i < CONDITION;
 				i++) {
 			BUFFER[i].color = color;
@@ -55,7 +55,7 @@ namespace sk {
 		default:
 			break;
 		}
-		refresh();
+		refresh_color();
 	}
 
 }

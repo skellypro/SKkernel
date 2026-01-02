@@ -12,20 +12,22 @@
 #include<stddef.h>
 #include<stdint.h>
 
-namespace sk {
+#include <iobuf.h>
 
-	extern "C" {
+#include <systemk/basic_io.h>
+
+namespace sk {
 
 		class basic_position{
 		public:
 
-			constexpr basic_position(size_t	newHeight,
+			virtual basic_position(size_t	newHeight,
 						size_t		newWidth,
 						size_t		newx = 0,
 						size_t		newy = 0)
 			:height(newHeight), width(newWidth), x(newx), y(newy) {}
 
-			constexpr basic_position(const basic_position & p)
+			virtual basic_position(const basic_position & p)
 			:height(p.height), width(p.width), x(p.x), y(p.y) {}
 
 			constexpr size_t Height() {
@@ -70,7 +72,8 @@ namespace sk {
 
 		};
 
-		class basic_out {
+		// TODO: redesign the children of basic_out to consider
+		class basic_out : basic_io {
 		public:
 			//TODO
 			basic_out() = 0;
@@ -79,8 +82,6 @@ namespace sk {
 
 			virtual void refresh() = 0;
 		};
-
-	}
 
 }
 #endif /* INCLUDE_BASIC_OUT_H_ */
