@@ -10,27 +10,29 @@
 #include "blocks.h"
 #include "segments.h"
 
-#ifndef fastcall
-#define fastcall _fastcall
-#endif
-
-static class alignas(memmap::mapdata) memmap {
+[[gnu::visibility(hidden)]] static class alignas(memmap::mapdata) memmap {
 public:
 	memmap();
 	~memmap();
+
+	void * alloc(size_t);
+	void * realloc(void *, size_t);
+	void * free(void *);
 private:
-	struct mapdata {
+	[[gnu::packed]] struct mapdata {
 		segment* start;
 	};
 
-	inline size_t findFistFree(register segment* seg, register uint8_t i = 0) {
+	// TODO: implement based on new segment family
+	[[gnu::fastcall]] inline size_t findFistFree(segment* seg, uint8_t i = 0) {
 		seg = findFreeSeg(seg);
 		while (/*seg->MetaBlock.freeFLAGS[i].n */)
 			i++;
 		return i;
-	}
+	};
 	
-	constexpr segment* findFreeSeg(segment* seg) {
+	// TODO: rewrite without recursion based on new segment class family
+	[[gnu::fastcall]] segment* findFreeSeg(segment* seg) {
 		if (FULLFLAGS == seg->MetaBlock.meta)
 			if (NULL == seg->MetaBlock.next) {
 				makeNewSeg(seg);
@@ -39,11 +41,12 @@ private:
 			else
 				findFreeSeg(seg->MetaBlock.next);
 		return seg;
-	}
+	};
 
-	inline void makeNewSeg(register segment* seg) {
+	// TODO: map out based on hardware
+	inline void makeNewSeg(segment* seg) {
 		seg->MetaBlock.next = seg;
 		seg->MetaBlock.next++;
 		*(seg->MetaBlock.next) = segment();
-	}
+	};
 } MemMap;

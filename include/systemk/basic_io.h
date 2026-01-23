@@ -8,6 +8,8 @@
  */
 #pragma once
 
+#include <iobuf.h>
+
 namespace sk {
     /*
     * abstract class basic_io.

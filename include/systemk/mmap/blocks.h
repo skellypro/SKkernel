@@ -12,7 +12,7 @@
 #endif
 
 #ifndef FULLFLAGS
-	#define FULLFLAGS	UINT64_MAX + (UINT64_MAX << 64) + (UINT64_MAX << 128) + (UINT64_MAX << 192)
+	#define FULLFLAGS	UINT64_MAX | (UINT64_MAX << 64) | (UINT64_MAX << 128) | (UINT64_MAX << 192)
 #endif
 
 #ifndef MEMPOISON
@@ -21,8 +21,8 @@
 
 //FIND A BETTER WAY TO DO THIS
 #ifndef BLOCKPOISON
-#define BLOCKPOISON	MEMPOISON + (MEMPOISON << 32) + (MEMPOISON << 64) + (MEMPOISON << 96)\
-	 + (MEMPOISON << 128) + (MEMPOISON << 160) + (MEMPOISON << 192) + (MEMPOISON << 224)
+#define BLOCKPOISON	MEMPOISON | (MEMPOISON << 32) | (MEMPOISON << 64) | (MEMPOISON << 96)\
+	 | (MEMPOISON << 128) | (MEMPOISON << 160) | (MEMPOISON << 192) | (MEMPOISON << 224)
 #endif
 
 class alignas(64) block {
@@ -30,34 +30,42 @@ public:
 	constexpr block();
 	virtual ~block() = 0;
 };
+
 class alignas(block) dataBlock : block {
 public:
-	unsigned n : 512;
+	// splitting the data block so it can be further managed when allocated
+	[[gnu::packed]] union{
+		unsigned n : 512;
+		uint64_t _64[8];
+		uint32_t _32[16];
+		uint16_t _16[32];
+		uint8_t _8[64];
+	};
 
-	constexpr dataBlock();
+	dataBlock();
 	~dataBlock() {
 		n = BLOCKPOISON;
 	}
 };
 
-class alignas(block) metaBlock : block {
+[[gnu::packed]] class alignas(block) metaBlock : block {
 public:
 	bit inUse;
-	union alignas(32) {
+	[[gnu::packed]] union alignas(32) {
 		bit freeFLAGS[BLOCKS_PER_SEG];
 		unsigned meta : BLOCKS_PER_SEG = 0;
 	};
 	segment* ThisSegment;
 	segment* next;
 
-	constexpr metaBlock()
-		: ThisSegment(NULL), next(NULL), meta(0), inUse(bit(1)) {
+	metaBlock()
+		: ThisSegment(NULL), next(NULL), meta(0), inUse({1}) {
 	}
-	constexpr metaBlock(segment* newSegment = NULL, segment* newNext = NULL)
-		: ThisSegment(newSegment), next(newNext), meta(0), inUse(bit(1)) {
+	metaBlock(segment* newSegment = NULL, segment* newNext = NULL)
+		: ThisSegment(newSegment), next(newNext), meta(0), inUse({1}) {
 	}
 
-	constexpr ~metaBlock() {
+	~metaBlock() {
 		if (NULL != ThisSegment)
 			ThisSegment->~segment();
 		if (NULL != next)

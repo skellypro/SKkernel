@@ -27,36 +27,40 @@
 
 class alignas(16384) segment {
 public:
-	virtual segment() = 0;
+	segment();
 	virtual  ~segment() = 0;
 };
 
-class alignas(segment) metaSegment : segment{
+[[gnu::packed]] class alignas(segment) metaSegment : segment{
 public:
-	 metaSegment() {
+	[[gnu::fastcall]] metaSegment() {
 		bitMaps[0].ThisSegment = this;
 		bitMaps[0].freeFLAGS[0].n = 1;
-	}
+	};
 
-	 ~metaSegment() {
-		for (register uint8_t i = BLOCKS_PER_SEG - 1; 1 <= i; i--)
+	~metaSegment() {
+		for (uint8_t i = BLOCKS_PER_SEG - 1; 1 <= i; i--)
 			bitMaps[i].~metaBlock();
 		bitMaps[0].ThisSegment = NULL;
 		bitMaps[0].~metaBlock();
-	}
-	metaBlock bitMaps[BLOCKS_PER_SEG] = {};
+	};
+
+	[[gnu::packed]] union {
+		metaBlock bitMaps[BLOCKS_PER_SEG];
+		unsigned meta : 131072;
+	};
 };
 
-class alignas(segment) dataSegment : segment {
+[[gnu::packed]] class alignas(segment) dataSegment : segment {
 public:
 	 dataSegment() {
-		for (register uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
+		for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
 			memBlock[i].n = BLOCKPOISON;
 	};
 
 	 ~dataSegment() {
-		for (register uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
+		for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
 			memBlock[i].n = BLOCKPOISON;
 	}
-	dataBlock memBlock[BLOCKS_PER_SEG] = {};
+	[[gnu::packed]] dataBlock memBlock[BLOCKS_PER_SEG];
 };
