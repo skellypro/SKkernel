@@ -10,7 +10,7 @@ typedef struct pte_t {
 		uint32_t value;
 		struct {
 		};
-#elifdef x86_64 || x86-64 || amd64 || AMD64
+#elifdef x86_64 || amd64 || AMD64
 		uint64_t value;
 		struct {
 		};
