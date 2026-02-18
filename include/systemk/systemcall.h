@@ -1,7 +1,3 @@
-<<<<<<< HEAD:include/systemk/systemcall.h
-=======
-<<<<<<< HEAD
->>>>>>> f4a27020ab761b99e846325de986efd01415bb59:include/systemcall.h
 /*
  * systemcall.h
  * @author: Sean Kelly
@@ -11,20 +7,10 @@
  * This file is intended to be included only in System K's kernel,
  * and might not behave properly in user space.
  */
-<<<<<<< HEAD:include/systemk/systemcall.h
-=======
-=======
->>>>>>> d95af9c57da2247754b5e087c0490a106cf6e359
->>>>>>> f4a27020ab761b99e846325de986efd01415bb59:include/systemcall.h
+
 #pragma once
 
 #include <cstdint>
-
-<<<<<<< HEAD:include/systemk/systemcall.h
-=======
-<<<<<<< HEAD
-
->>>>>>> f4a27020ab761b99e846325de986efd01415bb59:include/systemcall.h
 inline auto [[gnu::fastcall]] [[msvc::__fastcall]]
 systemcall(auto rc, auto rd) {
 	/* 
@@ -128,7 +114,3 @@ systemcall(uint64_t c, uint64_t d) {
 	return result;
 }
 #endif
-<<<<<<< HEAD:include/systemk/systemcall.h
-=======
->>>>>>> d95af9c57da2247754b5e087c0490a106cf6e359
->>>>>>> f4a27020ab761b99e846325de986efd01415bb59:include/systemcall.h
