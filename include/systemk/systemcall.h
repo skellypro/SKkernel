@@ -45,14 +45,14 @@ systemcall(auto rc, auto rd) {
 		: "a" (rc), "d" (rd)
 		: "rcx", "r11", "memory"
 		);
-#ifdef (__GNU__ || __clang__ || __MINGW64__ || __GNUC__) && (x86 || PENTIUM || K6)
+#elifdef (__GNU__ || __clang__ || __MINGW32__ || __GNUC__) && (x86 || PENTIUM2 || K6)
 	asm volatile (
-		"int $0x80"
+		"syscall"
 		: //"=a" (result)
 		: "a" (rc), "d" (rd)
 		: "memory"
 		);
-#ifdef (__GNU__ || __clang__ || __MINGW32__ || __GNUC__) && \
+#elifdef (__GNU__ || __clang__ || __MINGW32__ || __GNUC__) && \
 (i686 || i586 || i486 || i386 || i286 || i8086 || i8088 || i8080)
 	asm volatile (
 		"int $0x80"
@@ -66,7 +66,7 @@ systemcall(auto rc, auto rd) {
 		mov rdx, rd
 		syscall
 	}
-#elifdef __MSVC__ && (x86 || PENTIUM || K6)
+#elifdef __MSVC__ && (x86 || PENTIUM2 || K6)
 	__asm {
 		mov eax, rc
 		mov edx, rd
