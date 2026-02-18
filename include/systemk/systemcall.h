@@ -5,19 +5,20 @@
  * 
  * WARNING::
  * This file is intended to be included only in System K's kernel,
- * and might not behave properly in user space.
+ * and will not behave properly in user space. This header uses
+ * various inline assemblers for different compilers, and is in
+ * no way portable.
  */
 
 #pragma once
 
-#include <cstdint>
 inline auto [[gnu::fastcall]] [[msvc::__fastcall]]
 systemcall(auto rc, auto rd) {
-	/* 
-	 * I'm doing this until I figure out how to set up a macro
-	 * to get gnu compilers to not throw an error at the
-	 * register keyword within this file.
-	 */
+/* 
+ * I'm doing this until I figure out how to set up a macro
+ * to get gnu compilers to not throw an error at the
+ * register keyword within this file.
+ */
 /* leave this out for now
 #ifdef (__GNU__ || __clang__ || __MINGW64__ || __GNUC__)
 	auto [[no_unique_address]]result;
@@ -92,25 +93,3 @@ systemcall(auto rc, auto rd) {
 #endif
 	//return result;
 }
-=======
-#ifdef x86 || i686 || i586 || i486 || i386
-inline uint32_t [[gnu::fastcall]] [[msvc::__fastcall]]
-systemcall(uint32_t c, uint32_t d) {
-	int32_t [[no_unique_address]]result;
-	asm volatile (
-			"syscall"
-		: "=a"(result) : "c"(c), "d"(d)
-		)
-	return result;
-}
-#elifdef x86_64 || amd64 || AMD64
-inline uint64_t [[gnu::fastcall]] [[msvc::__fastcall]]
-systemcall(uint64_t c, uint64_t d) {
-	int64_t [[no_unique_address]]result;
-	asm volatile (
-			"syscall"
-		: "=a"(result) : "c"(c), "d"(d)
-		)
-	return result;
-}
-#endif
