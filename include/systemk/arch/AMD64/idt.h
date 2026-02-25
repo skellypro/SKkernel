@@ -6,15 +6,16 @@
  * Last Change:	Dec 16, 2024
  */
 
-#ifndef INCLUDE_ARCH_AMD64_IDT_H_
-#define INCLUDE_ARCH_AMD64_IDT_H_
+#pragma once
 
 #include<stddef.h>
 #include<stdint.h>
 
 #include<irq.h>
 
+#ifndef IDT_MAX_DESCRIPTORS
 #define IDT_MAX_DESCRIPTORS 256
+#endif
 
 extern "C"	{
 	typedef struct{
@@ -51,4 +52,3 @@ extern "C"	{
 
 	void exception_handler(void) __attribute__((noreturn));
 }
-#endif /* INCLUDE_ARCH_AMD64_IDT_H_ */

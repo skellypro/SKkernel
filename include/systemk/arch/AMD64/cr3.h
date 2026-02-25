@@ -8,16 +8,15 @@
  * Description:
  */
 
-#ifndef INCLUDE_ARCH_AMD64_CR3_H_
-#define INCLUDE_ARCH_AMD64_CR3_H_
+#pragma once
 
 #include<stddef.h>
 #include<stdint.h>
 
-#include<arch/i686/cr3.h>
+#include<systemk/arch/i686/cr3.h>
 
-namespace assembly {
+namespace sk {
+	namespace arch {
 
+	}
 }
-
-#endif /* INCLUDE_ARCH_AMD64_CR3_H_ */

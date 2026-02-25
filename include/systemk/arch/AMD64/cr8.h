@@ -8,23 +8,21 @@
  * Description:
  */
 
-#ifndef INCLUDE_ARCH_AMD64_CR8_H_
-#define INCLUDE_ARCH_AMD64_CR8_H_
+#pragma once
 
 #include<stddef.h>
 #include<stdint.h>
 
-namespace assembly {
+namespace sk {
+	namespace arch {
 
-	union cr8_t{
-		uint64_t value;
-		struct {
-			unsigned	tpr : 4,		//Task Priority
-						reserved : 60;	//system reserved
-		};
-	}__attribute__((packed));
+		union cr8_t {
+			uint64_t value;
+			struct {
+				unsigned	tpr : 4,		//Task Priority
+					reserved : 60;	//system reserved
+			};
+		}__attribute__((packed));
 
+	}
 }
-
-
-#endif /* INCLUDE_ARCH_AMD64_CR8_H_ */

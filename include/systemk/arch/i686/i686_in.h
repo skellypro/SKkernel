@@ -5,8 +5,7 @@
  *      Author: sean
  */
 
-#ifndef INCLUDE_ARCH_I686_I686_IN_H_
-#define INCLUDE_ARCH_I686_I686_IN_H_
+#pragma once
 
 #include<stddef.h>
 #include<stdint.h>
@@ -15,8 +14,8 @@
 #define i686
 #endif
 
-namespace assembly {
+namespace sk {
+	namespace arch {
 
+	}
 }
-
-#endif /* INCLUDE_ARCH_I686_I686_IN_H_ */

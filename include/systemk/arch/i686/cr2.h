@@ -8,24 +8,24 @@
  * Description:
  */
 
-#ifndef INCLUDE_ARCH_I686_CR2_H_
-#define INCLUDE_ARCH_I686_CR2_H_
+#pragma once
 
 #include<stddef.h>
 #include<stdint.h>
+/*************************************************************************
+* TODO: CHANGE THE arch NAMESPACE TO arch WITHIN THE arch DIRECTORY
+*	MAKE CR CLASSES MORE UNIVERSAL TO REDUCE LINES OF CODE
+**************************************************************************/
+namespace sk {
+	namespace arch {
 
-namespace assembly {
+		typedef class cr2_C {
+		public:
+			cr2_C();
 
-	class i686_cr2_C {
-	public:
-		i686_cr2_C();
-
-		uint32_t getPFVA();
-	private:
-		struct i686_cr2_t {
-			uint32_t pfva; //Page Fault Virtual Address
-		}__attribute__((packed)) i686_cr2;
-	};
+			uint32_t getPFVA();
+		private:
+			void* pfva; //Page Fault Virtual Address
+		} cr2;
+	}
 }
-
-#endif /* INCLUDE_ARCH_I686_CR2_H_ */
