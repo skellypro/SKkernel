@@ -9,7 +9,7 @@
 
 extern "C" {
 	pte_t virt2phys(pid_t process_id, void* addr) {
-		unsigned * intAddr = reinterpret_cast<uintptr_t>(addr);
+		unsigned * intAddr = reinterpret_cast<unsigned *>(addr);
 		// deconstruct the address
 		unsigned * pageOffcet = intAddr & 0xfff,
 			ptOffset = intAddr & 0x1ff000 >> 12,
