@@ -21,7 +21,6 @@ extern "C" {
 		// TODO: See if the page is there, otherwise throw a fault code.
 		if (!pteAddr->present)
 			throw page_fault_exception(process_id, 1);
-
 		// send a copy of the page table entry to the parent
 		return *pteAddr;
 	}
