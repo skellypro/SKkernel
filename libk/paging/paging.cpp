@@ -20,7 +20,11 @@ extern "C" {
 		pte_t *pteAddr = reinterpret_cast<pte_t *>((&[process_id][pml4Offset][pdptOffset][pdOffset][ptOffset]));
 		// TODO: See if the page is there, otherwise throw a fault code.
 		if (!pteAddr->present)
+<<<<<<< HEAD
 			throw page_fault_exception(process_id, 1);
+=======
+			throw page_fault_exception(process_id, reinterpret_cast<void*>(pteAddr), 1);
+>>>>>>> f2a416e3daddc50119886e134e18e81951fefa8e
 
 		// send a copy of the page table entry to the parent
 		return *pteAddr;

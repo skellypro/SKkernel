@@ -30,7 +30,11 @@ typedef struct alignas(sizeof(unsigned long long)) _page_fault_error_code_struct
 class page_fault_exception : public exception {
 public:
 	page_fault_exception(unsigned p, unsigned long long c) : exception()
+<<<<<<< HEAD
 	: pid(p), addr(sk::arch::cr2.getPFVA()), code.value(c) {}
+=======
+	: pid(p), addr(a), code.value(arch::cr2.getPFVA()) {}
+>>>>>>> f2a416e3daddc50119886e134e18e81951fefa8e
 	unsigned get_pid() {
 		return pid;
 	}
