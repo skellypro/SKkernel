@@ -4,33 +4,19 @@
 
 #ifdef AMD64 || x86_64
 #include <systemk/arch/AMD64/cr2.h>
+#include <systemk/arch/AMD64/exceptions.h>
 #elifdef i686 || x86
 #include <systemk/arch/i686/cr2.h>
+#include <systemk/arch/i686/exceptions.h>
+#endif
 
 using std::exception;
 
-typedef struct alignas(sizeof(unsigned long long)) _page_fault_error_code_struct {
-	union {
-			struct {
-			unsigned p : 1;
-			unsigned w : 1;
-			unsigned u : 1;
-			unsigned resrvedwrite : 1;
-			unsigned i : 1;
-			unsigned pk : 1;
-			unsigned ss : 1;
-			unsigned : 7;
-			unsigned sgx : 1;
-		};
-		unsigned long long value;
-
-	};
-} page_fault_code;
 
 class page_fault_exception : public exception {
 public:
-	page_fault_exception(unsigned p, unsigned long long c)
-	: pid(p), addr(sk::arch::cr2.getPFVA()), code.value(c) {}
+	page_fault_exception(unsigned p, unsigned long long c, void * a = sk::arch::cr2.getPFVA())
+	: pid(p), addr(a), code.value(c) {}
 	unsigned get_pid() {
 		return pid;
 	}
