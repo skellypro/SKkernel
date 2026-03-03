@@ -17,36 +17,36 @@
 namespace sk {
 	namespace arch {
 
-		class i686_cr0_C {
+		typedef class i686_cr0_C {
 		public:
 			i686_cr0_C();
 
-			bool getpe();
-			bool getmp();
-			bool getem();
-			bool getts();
-			bool getet();
-			bool getne();
-			bool getwp();
-			bool getam();
-			bool getnw();
-			bool getcd();
-			bool getpg();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getpe();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getmp();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getem();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getts();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getet();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getne();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getwp();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getam();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getnw();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getcd();
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] getpg();
 
-			int setpe(register uint8_t = -1);
-			int setmp(register uint8_t = -1);
-			int setem(register uint8_t = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setpe(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setmp(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setem(short = -1);
 
-			int setts(register uint8_t = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setts(short = -1);
 			void clts();
 
-			int setet(register uint8_t = -1);
-			int setne(register uint8_t = -1);
-			int setwp(register uint8_t = -1);
-			int setam(register uint8_t = -1);
-			int setnw(register uint8_t = -1);
-			int setcd(register uint8_t = -1);
-			int setpg(register uint8_t = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setet(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setne(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setwp(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setam(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setnw(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setcd(short = -1);
+			int [[gnu::fastcall]] [[msvc::__fastcall]] setpg(short = -1);
 
 		private:
 			union i686_cr0_t {
@@ -69,11 +69,26 @@ namespace sk {
 				};
 			}__attribute__((packed));
 
-			uint32_t getCR0();
-			void setCR0(register uint32_t newCR0);
+			[[gnu::always_inline]]
+			inline unsigned long long [[gnu::fastcall]] [[msvc::__fastcall]] getCR0() {
+				asm volatile ("movd %cr0, %0"
+					:"=a");
+			}
 
-			bool GDTset();
-			bool protectedIDTset();
-		};
+			[[gnu::always_inline]]
+			inline void [[gnu::fastcall]] [[msvc::__fastcall]] setCR0(unsigned long long newCR0) {
+				asm volatile("movd %0, cr0"
+					:
+					: "c" (newCR0));
+			}
+
+			[[gnu::always_inline]]
+			inline bool [[gnu::fastcall]] [[msvc::__fastcall]] GDTset() {
+				asm volatile ("movd %gdtr, %0"
+					:"=a" (temp));
+			}
+
+			bool [[gnu::fastcall]] [[msvc::__fastcall]] protectedIDTset();
+		} i686_cr0;
 	}
 }
