@@ -16,6 +16,7 @@ using sk::System;
 
 extern "C" {
 
+	// commit test.
 	static System kernel;
 
 	void kernel_main(void) {
