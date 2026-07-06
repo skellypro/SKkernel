@@ -1,0 +1,19 @@
+#pragma once
+
+#define NMI				02H
+#define PRINT_SCREEN	05H
+#define SYSTEM_TIMER	08H
+#define KEYBOARD		09H
+#define VIDEO			10H
+#define EQUIPMENT_CHECK	11H
+#define MEM_CHECK		12H
+#define DISKETTE		13H
+#define FIXED_DISK		DISKETTE
+#define ASYNC_COMM		14H
+#define SYS_SERVICE		15H
+#define KEYBOARD_BRK	16H
+#define PRINTER			17H
+#define BOOTLOADER		19H
+#define SYS_TIMER		1AH
+#define RTC_SERVICE		SYS_TIMER
+#define REALTIME_CLOCK	70H
