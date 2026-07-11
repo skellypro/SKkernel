@@ -35,7 +35,7 @@ inline void pushw(uint16_t v) {
 	asm volatile (
 		"pushw %0\n"
 		:
-	: "g"(v)
+		: "g"(v)
 		: "memory");
 }
 
@@ -55,7 +55,7 @@ inline void pushd(uint32_t v) {
 	asm volatile (
 		"pushd %0\n"
 		:
-	: "g"(v)
+		: "g"(v)
 		: "memory");
 }
 
@@ -75,7 +75,7 @@ inline void pushq(uint64_t v) {
 	asm volatile (
 		"pushq %0\n"
 		:
-	: "g"(v)
+		: "g"(v)
 		: "memory");
 }
 
