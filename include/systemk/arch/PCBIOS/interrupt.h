@@ -24,8 +24,8 @@ inline uint16_t basic_interrupt(uint16_t i,
 							uint16_t bx,
 							uint16_t cx,
 							uint16_t dx,
-							uint16_t si,
-							uint16_t di) {
+							void * si,
+							void * di) {
 	uint16_t ax = (ah << 8) | al;
 	asm volatile (
 		"int %1\n"

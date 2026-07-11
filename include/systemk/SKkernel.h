@@ -13,7 +13,7 @@
 #define KERNEL
 
 #ifndef NULL
-#define NULL 				0
+#define NULL 				reinterpret_cast<void*>(0)
 #endif
 
 extern "C" {

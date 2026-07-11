@@ -41,6 +41,10 @@ void idt::init(){
 			vectors[vector] = true;
 	}
 
-	asm volatile ("lidt %0" : : "m"(idtr)); // load the new IDT
+	lidtr(); // load the new IDT
 	asm volatile ("sti"); // set the interrupt flag
+}
+
+void idt::lidtr() {
+	asm volatile ("lidt %0" : : "m"(idtr));
 }
