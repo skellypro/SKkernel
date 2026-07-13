@@ -13,20 +13,21 @@
 
 #include "interrupts.h"
 
-// This function is VERY DANGEROUS!!!
-// There is no handling used in this implementation.
-// This is intended to be used in an object that
-// handles interrupts.
+/***************************************************
+ * This function is VERY DANGEROUS!!!
+ * There is no handling used in this implementation.
+ * This is intended to be used in an object that
+ * handles interrupts. The parameters assume the
+ * caller has set up registers and memory properly.
+ */
 [[always_inline]]
 inline uint16_t basic_interrupt(uint16_t i,
-							uint8_t ah,
-							uint8_t al,
+							uint16_t ax,
 							uint16_t bx,
 							uint16_t cx,
 							uint16_t dx,
 							void * si,
 							void * di) {
-	uint16_t ax = (ah << 8) | al;
 	asm volatile (
 		"int %1\n"
 		: "=a"(ax)

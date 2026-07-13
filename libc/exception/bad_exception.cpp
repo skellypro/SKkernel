@@ -1,3 +1,11 @@
+/*
+ * bad_exception.cpp
+ *
+ *  Created on: Jul 12, 2026
+ *      Author: sean
+ *
+ * Description:	Bad exception class implementation.
+ */
 #include <exception>
 
 namespace std {

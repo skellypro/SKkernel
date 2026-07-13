@@ -1,3 +1,12 @@
+/*
+ * new
+ *
+ *  Created on: Jul 12, 2026
+ *      Author: sean
+ *
+ * Description:	Implementation of operators new, and delete,
+ *				And associated exception handlers.
+ */
 #pragma once
 
 #include <exception>

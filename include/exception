@@ -1,4 +1,11 @@
-
+/*
+ * exception
+ *
+ *  Created on: Jul 12, 2026
+ *      Author: sean
+ *
+ * Description:	Standard exception class family.
+ */
 #pragma once
 
 namespace std {
