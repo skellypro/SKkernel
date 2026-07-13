@@ -29,9 +29,8 @@ extern "C" {
 			temp = malloc(size);
 		}
 		catch (std::bad_alloc& e) {
-			if (nothrow_value) {
+			if (nothrow_value)
 				return nullptr;
-			}
 			throw e;
 		}
 		return temp;
@@ -66,9 +65,8 @@ extern "C" {
 			temp = calloc(num, size);
 		}
 		catch (std::bad_alloc& e) {
-			if (nothrow_value) {
+			if (nothrow_value)
 				return nullptr;
-			}
 			throw e;
 		}
 		return temp;
@@ -129,7 +127,7 @@ namespace std {
 	bad_alloc::bad_alloc(const bad_alloc&) noexcept {
 	}
 
-	bad_alloc& bad_alloc::operator= (const bad_alloc&) noexcept {
+	bad_alloc& bad_alloc::operator=(const bad_alloc&) noexcept {
 	}
 
 	bad_alloc::~bad_alloc() {
@@ -145,7 +143,7 @@ namespace std {
 	bad_array_new_length::bad_array_new_length(const bad_array_new_length&) noexcept {
 	}
 
-	bad_array_new_length::bad_array_new_length& operator= (const bad_array_new_length&) noexcept {
+	bad_array_new_length::bad_array_new_length& operator=(const bad_array_new_length&) noexcept {
 	}
 
 	bad_array_new_length::~bad_array_new_length() {
