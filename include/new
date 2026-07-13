@@ -1,0 +1,61 @@
+#pragma once
+
+#include <exception>
+
+#include <cstdlib>
+
+namespace std {
+	class bad_alloc : public std::exception {
+	public:
+		bad_alloc() noexcept;
+		bad_alloc(const bad_alloc&) noexcept;
+		bad_alloc& operator= (const bad_alloc&) noexcept;
+		virtual ~bad_alloc();
+		virtual const char* what() const noexcept override;
+	};
+
+	class bad_array_new_length : public std::bad_alloc {
+	public:
+		bad_array_new_length() noexcept;
+		bad_array_new_length(const bad_array_new_length&) noexcept;
+		bad_array_new_length& operator= (const bad_array_new_length&) noexcept;
+		virtual ~bad_array_new_length();
+		virtual const char* what() const noexcept override;
+	};
+
+	struct nothrow_t {};
+
+	typedef void (*new_handler)();
+
+	extern const nothrow_t nothrow;
+
+	new_handler set_new_handler(new_handler new_p) noexcept;
+
+	new_handler get_new_handler() noexcept;
+}
+
+extern "C" {
+	void* operator new(std::size_t size);
+
+	void* operator new(std::size_t size, void* ptr) noexcept;
+
+	void* operator new(std::size_t size, const std::nothrow_t& nothrow_value) noexcept;
+
+	void* operator new[](std::size_t num, std::size_t size);
+
+	void* operator new[](std::size_t size, void* ptr) noexcept;
+
+	void* operator new[](std::size_t size, const std::nothrow_t& nothrow_value) noexcept;
+
+	void operator delete(void* old) noexcept;
+
+	void operator delete(void* ptr, void* voidptr2) noexcept;
+
+	void operator delete(void* ptr, const std::nothrow_t& nothrow_constant) noexcept;
+
+	void operator delete[](void* old) noexcept;
+
+	void operator delete[](void* ptr, void* voidptr2) noexcept;
+
+	void operator delete[](void* ptr, const std::nothrow_t& nothrow_constant) noexcept;
+}
