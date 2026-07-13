@@ -1,0 +1,64 @@
+
+#pragma once
+
+namespace std {
+	class exception {
+	public:
+		exception() noexcept;
+		exception(const exception&) noexcept;
+		exception& operator= (const exception&) noexcept;
+		virtual ~exception();
+		virtual const char* what() const noexcept;
+	};
+
+	class bad_exception : public exception {
+	public:
+		bad_exception() noexcept;
+		bad_exception(const bad_exception&) noexcept;
+		bad_exception& operator= (const bad_exception&) noexcept;
+		virtual ~bad_exception() noexcept;
+		virtual const char* what() const noexcept;
+	};
+
+	class nested_exception : public exception {
+	public:
+		nested_exception() noexcept;
+		nested_exception(const nested_exception&) noexcept;
+		nested_exception& operator= (const nested_exception&) noexcept;
+		virtual ~nested_exception() noexcept;
+		virtual const char* what() const noexcept;
+	 };
+
+	typedef (void*) exception_ptr;
+
+	typedef void (*terminate_handler)();
+
+	typedef void (*unexpected_handler)();
+
+	[[noreturn]] void terminate() noexcept;
+	
+	terminate_handler get_terminate() noexcept;
+	
+	terminate_handler set_terminate(terminate_handler f) noexcept;
+	
+	[[noreturn]] void unexpected();
+	
+	unexpected_handler get_unexpected() noexcept;
+	
+	unexpected_handler set_unexpected(unexpected_handler f) noexcept;
+	
+	bool uncaught_exception() noexcept;
+	
+	exception_ptr current_exception() noexcept;
+	
+	[[noreturn]] void rethrow_exception(exception_ptr p);
+	
+	template <class E>
+	exception_ptr make_exception_ptr(E e) noexcept;
+	
+	[[noreturn]] template <class T>
+	void throw_with_nested(T&& e);
+	
+	template <class T>
+	void rethrow_if_nested(const T& e);
+}
