@@ -27,7 +27,7 @@ public:
 		return code;
 	}
 private:
-	unsigned pid;
-	void* addr;
-	page_fault_code code;
+	volatile unsigned pid;
+	volatile void* addr;
+	volatile page_fault_code code;
 };

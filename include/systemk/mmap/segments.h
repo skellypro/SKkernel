@@ -46,8 +46,8 @@ public:
 	};
 
 	[[gnu::packed]] union {
-		metaBlock bitMaps[BLOCKS_PER_SEG];
-		unsigned meta : 131072;
+		volatile metaBlock bitMaps[BLOCKS_PER_SEG];
+		volatile unsigned meta : 131072;
 	};
 };
 
@@ -62,5 +62,5 @@ public:
 		for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
 			memBlock[i].n = BLOCKPOISON;
 	}
-	[[gnu::packed]] dataBlock memBlock[BLOCKS_PER_SEG];
+	[[gnu::packed]] volatile dataBlock memBlock[BLOCKS_PER_SEG];
 };

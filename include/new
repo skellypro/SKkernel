@@ -58,13 +58,13 @@ extern "C" {
 
 	void operator delete(void* old) noexcept;
 
-	void operator delete(void* ptr, void* voidptr2) noexcept;
-
 	void operator delete(void* ptr, const std::nothrow_t& nothrow_constant) noexcept;
 
 	void operator delete[](void* old) noexcept;
 
-	void operator delete[](void* ptr, void* voidptr2) noexcept;
-
 	void operator delete[](void* ptr, const std::nothrow_t& nothrow_constant) noexcept;
+
+	// Placement delete.
+	void operator delete(void* ptr, void* voidptr2) noexcept;
+	void operator delete[](void* ptr, void* voidptr2) noexcept;
 }

@@ -13,7 +13,7 @@
 
 extern "C" {
 	void* operator new(std::size_t size) {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = malloc(size);
 		} catch (std::bad_alloc& e) {
@@ -23,7 +23,7 @@ extern "C" {
 	}
 
 	void* operator new(std::size_t size, void* ptr) noexcept {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = realloc(ptr, size);
 		} catch (std::bad_alloc& e) {
@@ -33,12 +33,11 @@ extern "C" {
 	}
 
 	void* operator new(std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = malloc(size);
-		}
-		catch (std::bad_alloc& e) {
-			if (nothrow_value)
+		} catch (std::bad_alloc& e) {
+			if (nothrow == nothrow_value)
 				return nullptr;
 			throw e;
 		}
@@ -46,18 +45,17 @@ extern "C" {
 	}
 
 	void* operator new[](std::size_t num, std::size_t size) {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = calloc(num, size);
-		}
-		catch (std::bad_alloc& e) {
+		} catch (std::bad_alloc& e) {
 			throw e;
 		}
 		return temp;
 	}
 
 	void* operator new[](std::size_t size, void* ptr) noexcept {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = realloc(ptr, size);
 		} catch (std::bad_alloc& e) {
@@ -69,12 +67,11 @@ extern "C" {
 	}
 
 	void* operator new[](std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
-		void* temp;
+		volatile void* temp;
 		try {
 			temp = calloc(num, size);
-		}
-		catch (std::bad_alloc& e) {
-			if (nothrow_value)
+		} catch (std::bad_alloc& e) {
+			if (nothrow == nothrow_value)
 				return nullptr;
 			throw e;
 		}
@@ -84,21 +81,21 @@ extern "C" {
 	void operator delete(void* old) noexcept {
 		try {
 			free(old);
-		}
-		catch (std::bad_alloc& e) {
+		} catch (std::bad_alloc& e) {
 			throw e;
 		}
 	}
 
+	// Placement delete. This will always do nothing, as per the C++ standard.
 	void operator delete(void* ptr, void* voidptr2) noexcept {
 	}
 
 	void operator delete(void* ptr, const std::nothrow_t& nothrow_constant) noexcept {
 		try {
 			free(old);
-		}
-		catch (std::bad_alloc& e) {
-			if (nothrow_constant);
+		} catch (std::bad_alloc& e) {
+			if (nothrow == nothrow_constant)
+				;
 			else
 				throw e;
 		}
@@ -107,20 +104,19 @@ extern "C" {
 	void operator delete[](void* old) noexcept {
 		try {
 			free(old);
-		}
-		catch (std::bad_alloc& e) {
+		} catch (std::bad_alloc& e) {
 			throw e;
 		}
 	}
 
+	// Placement delete. This will always do nothing, as per the C++ standard.
 	void operator delete[](void* ptr, void* voidptr2) noexcept {
 	}
 
 	void operator delete[](void* ptr, const std::nothrow_t& nothrow_constant) noexcept {
 		try {
 			free(old);
-		}
-		catch (std::bad_alloc& e) {
+		} catch (std::bad_alloc& e) {
 			if (nothrow_constant);
 			else
 				throw e;

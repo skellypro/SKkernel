@@ -35,11 +35,11 @@ class alignas(block) dataBlock : block {
 public:
 	// splitting the data block so it can be further managed when allocated
 	[[gnu::packed]] union{
-		unsigned n : 512;
-		uint64_t _64[8];
-		uint32_t _32[16];
-		uint16_t _16[32];
-		uint8_t _8[64];
+		volatile unsigned n : 512;
+		volatile uint64_t _64[8];
+		volatile uint32_t _32[16];
+		volatile uint16_t _16[32];
+		volatile uint8_t _8[64];
 	};
 
 	dataBlock();
@@ -50,10 +50,10 @@ public:
 
 [[gnu::packed]] class alignas(block) metaBlock : block {
 public:
-	bit inUse;
+	volatile bit inUse;
 	[[gnu::packed]] union alignas(32) {
-		bit freeFLAGS[BLOCKS_PER_SEG];
-		unsigned meta : BLOCKS_PER_SEG = 0;
+		volatile bit freeFLAGS[BLOCKS_PER_SEG];
+		volatile unsigned meta : BLOCKS_PER_SEG = 0;
 	};
 	segment* ThisSegment;
 	segment* next;
