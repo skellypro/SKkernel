@@ -14,66 +14,48 @@
 extern "C" {
 	void* operator new(std::size_t size) {
 		volatile void* temp;
-		try {
-			temp = malloc(size);
-		} catch (std::bad_alloc& e) {
-			throw e;
-		}
+		if (nullptr == (temp = malloc(size)))
+			throw std::bad_alloc();
 		return temp;
 	}
 
 	void* operator new(std::size_t size, void* ptr) noexcept {
 		volatile void* temp;
-		try {
-			temp = realloc(ptr, size);
-		} catch (std::bad_alloc& e) {
-			throw e;
-		}
+		if (nullptr == (temp = realloc(ptr,size)))
+			throw std::bad_alloc();
 		return temp;
 	}
 
 	void* operator new(std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
 		volatile void* temp;
-		try {
-			temp = malloc(size);
-		} catch (std::bad_alloc& e) {
+		if (nullptr == (temp = malloc(size))){
 			if (nothrow == nothrow_value)
-				return nullptr;
-			throw e;
+				return temp;
+			throw std::bad_alloc();
 		}
 		return temp;
 	}
 
 	void* operator new[](std::size_t num, std::size_t size) {
 		volatile void* temp;
-		try {
-			temp = calloc(num, size);
-		} catch (std::bad_alloc& e) {
-			throw e;
-		}
+		if (nullptr == (temp = calloc(num, size)))
+			throw std::bad_alloc();
 		return temp;
 	}
 
 	void* operator new[](std::size_t size, void* ptr) noexcept {
 		volatile void* temp;
-		try {
-			temp = realloc(ptr, size);
-		} catch (std::bad_alloc& e) {
-			throw e;
-		} catch (std::bad_array_new_length& e) {
-			throw e;
-		}
+		if (nullptr == (temp = realloc(ptr,size)))
+			throw std::bad_array_new_length();
 		return temp;
 	}
 
 	void* operator new[](std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
 		volatile void* temp;
-		try {
-			temp = calloc(num, size);
-		} catch (std::bad_alloc& e) {
+		if (nullptr == (temp = malloc(size))) {
 			if (nothrow == nothrow_value)
 				return nullptr;
-			throw e;
+			throw std::bad_alloc();
 		}
 		return temp;
 	}
@@ -81,8 +63,8 @@ extern "C" {
 	void operator delete(void* old) noexcept {
 		try {
 			free(old);
-		} catch (std::bad_alloc& e) {
-			throw e;
+		} catch (...) {
+			throw std::bad_alloc();
 		}
 	}
 
@@ -93,19 +75,21 @@ extern "C" {
 	void operator delete(void* ptr, const std::nothrow_t& nothrow_constant) noexcept {
 		try {
 			free(old);
-		} catch (std::bad_alloc& e) {
+		} catch (...) {
 			if (nothrow == nothrow_constant)
 				;
 			else
-				throw e;
+				throw std::bad_alloc();
 		}
+
 	}
 
 	void operator delete[](void* old) noexcept {
 		try {
 			free(old);
-		} catch (std::bad_alloc& e) {
-			throw e;
+		}
+		catch (...) {
+			throw std::bad_alloc();
 		}
 	}
 
@@ -116,10 +100,10 @@ extern "C" {
 	void operator delete[](void* ptr, const std::nothrow_t& nothrow_constant) noexcept {
 		try {
 			free(old);
-		} catch (std::bad_alloc& e) {
+		} catch (...) {
 			if (nothrow_constant);
 			else
-				throw e;
+				throw std::bad_alloc();
 		}
 	}
 }
