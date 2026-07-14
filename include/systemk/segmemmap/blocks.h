@@ -25,53 +25,48 @@
 	 | (MEMPOISON << 128) | (MEMPOISON << 160) | (MEMPOISON << 192) | (MEMPOISON << 224)
 #endif
 
-class alignas(64) block {
-public:
-	constexpr block();
-	virtual ~block() = 0;
-};
-
-class alignas(block) dataBlock : block {
-public:
-	// splitting the data block so it can be further managed when allocated
-	[[gnu::packed]] union{
-		volatile unsigned n : 512;
-		volatile uint64_t _64[8];
-		volatile uint32_t _32[16];
-		volatile uint16_t _16[32];
-		volatile uint8_t _8[64];
+namespace sk {
+	class alignas(64) block {
+	public:
+		block();
+		virtual block(const block&) = 0;
+		virtual block& operator=(const block&) = 0;
+		virtual ~block() = 0;
 	};
 
-	dataBlock();
-	~dataBlock() {
-		n = BLOCKPOISON;
-	}
-};
+	class alignas(block) dataBlock : block {
+	public:
+		// splitting the data block so it can be further managed when allocated
+		[[gnu::packed]] union {
+			volatile unsigned n : 512;
+			volatile uint64_t _64[8];
+			volatile uint32_t _32[16];
+			volatile uint16_t _16[32];
+			volatile uint8_t _8[64];
+		};
 
-[[gnu::packed]] class alignas(block) metaBlock : block {
-public:
-	volatile bit inUse;
-	[[gnu::packed]] union alignas(32) {
-		volatile bit freeFLAGS[BLOCKS_PER_SEG];
-		volatile unsigned meta : BLOCKS_PER_SEG = 0;
+		dataBlock();
+		dataBlock(const dataBlock&);
+		dataBlock& operator=(const dataBlock&);
+		~dataBlock();
 	};
-	segment* ThisSegment;
-	segment* next;
 
-	metaBlock()
-		: ThisSegment(NULL), next(NULL), meta(0), inUse({1}) {
-	}
-	metaBlock(segment* newSegment = NULL, segment* newNext = NULL)
-		: ThisSegment(newSegment), next(newNext), meta(0), inUse({1}) {
-	}
+	[[gnu::packed]] class alignas(block) metaBlock : block {
+	public:
+		volatile bit inUse;
+		[[gnu::packed]] union alignas(32) {
+			volatile bit freeFLAGS[BLOCKS_PER_SEG];
+			volatile unsigned meta : BLOCKS_PER_SEG = 0;
+		};
+		segment* ThisSegment;
+		segment* next;
 
-	~metaBlock() {
-		if (NULL != ThisSegment)
-			ThisSegment->~segment();
-		if (NULL != next)
-			next->~segment();
-		ThisSegment = next = NULL;
-		meta = BLOCKPOISON;
-		inUse.n = 0;
-	}
-};
+		metaBlock();
+		metaBlock(segment* newSegment = NULL, segment* newNext = NULL);
+
+		metaBlock(const metaBlock&);
+		metaBlock& operator=(const metaBlock&);
+
+		~metaBlock();
+	};
+}

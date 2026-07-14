@@ -24,43 +24,44 @@
 	#define BLOCKPOISON	MEMPOISON | (MEMPOISON << 32) | (MEMPOISON << 64) | (MEMPOISON << 96)\
 		 | (MEMPOISON << 128) | (MEMPOISON << 160) | (MEMPOISON << 192) | (MEMPOISON << 224)
 #endif
-
-class alignas(16384) segment {
-public:
-	segment();
-	virtual  ~segment() = 0;
-};
-
-[[gnu::packed]] class alignas(segment) metaSegment : segment{
-public:
-	[[gnu::fastcall]] metaSegment() {
-		bitMaps[0].ThisSegment = this;
-		bitMaps[0].freeFLAGS[0].n = 1;
+namespace sk {
+	class alignas(16384) segment {
+	public:
+		segment();
+		virtual  ~segment() = 0;
 	};
 
-	~metaSegment() {
-		for (uint8_t i = BLOCKS_PER_SEG - 1; 1 <= i; i--)
-			bitMaps[i].~metaBlock();
-		bitMaps[0].ThisSegment = NULL;
-		bitMaps[0].~metaBlock();
+	[[gnu::packed]] class alignas(segment) metaSegment : segment {
+	public:
+		[[gnu::fastcall]] metaSegment() {
+			bitMaps[0].ThisSegment = this;
+			bitMaps[0].freeFLAGS[0].n = 1;
+		};
+
+		~metaSegment() {
+			for (uint8_t i = BLOCKS_PER_SEG - 1; 1 <= i; i--)
+				bitMaps[i].~metaBlock();
+			bitMaps[0].ThisSegment = NULL;
+			bitMaps[0].~metaBlock();
+		};
+
+		[[gnu::packed]] union {
+			volatile metaBlock bitMaps[BLOCKS_PER_SEG];
+			volatile unsigned meta : 131072;
+		};
 	};
 
-	[[gnu::packed]] union {
-		volatile metaBlock bitMaps[BLOCKS_PER_SEG];
-		volatile unsigned meta : 131072;
-	};
-};
+	[[gnu::packed]] class alignas(segment) dataSegment : segment {
+	public:
+		dataSegment() {
+			for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
+				memBlock[i].n = BLOCKPOISON;
+		};
 
-[[gnu::packed]] class alignas(segment) dataSegment : segment {
-public:
-	 dataSegment() {
-		for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
-			memBlock[i].n = BLOCKPOISON;
+		~dataSegment() {
+			for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
+				memBlock[i].n = BLOCKPOISON;
+		}
+		[[gnu::packed]] volatile dataBlock memBlock[BLOCKS_PER_SEG];
 	};
-
-	 ~dataSegment() {
-		for (uint8_t i = BLOCKS_PER_SEG - 1; i; i--)
-			memBlock[i].n = BLOCKPOISON;
-	}
-	[[gnu::packed]] volatile dataBlock memBlock[BLOCKS_PER_SEG];
-};
+}
