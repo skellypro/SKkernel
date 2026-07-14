@@ -12,7 +12,7 @@
 
 namespace std {
 	[[noreturn]] void terminate() noexcept {
-		abort();
+		std::abort();
 	}
 
 	terminate_handler get_terminate() noexcept {
