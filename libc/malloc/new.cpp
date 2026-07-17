@@ -29,9 +29,8 @@ extern "C" {
 	void* operator new(std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
 		volatile void* temp;
 		if (nullptr == (temp = malloc(size))){
-			if (nothrow == nothrow_value)
-				return temp;
-			throw std::bad_alloc();
+			if (nothrow != nothrow_value)
+				throw std::bad_alloc();
 		}
 		return temp;
 	}
@@ -52,11 +51,9 @@ extern "C" {
 
 	void* operator new[](std::size_t size, const std::nothrow_t& nothrow_value) noexcept {
 		volatile void* temp;
-		if (nullptr == (temp = malloc(size))) {
-			if (nothrow == nothrow_value)
-				return nullptr;
-			throw std::bad_alloc();
-		}
+		if (nullptr == (temp = malloc(size)))
+			if (nothrow != nothrow_value)
+				throw std::bad_alloc();
 		return temp;
 	}
 
@@ -76,9 +73,7 @@ extern "C" {
 		try {
 			free(old);
 		} catch (...) {
-			if (nothrow == nothrow_constant)
-				;
-			else
+			if (nothrow != nothrow_constant)
 				throw std::bad_alloc();
 		}
 
@@ -87,8 +82,7 @@ extern "C" {
 	void operator delete[](void* old) noexcept {
 		try {
 			free(old);
-		}
-		catch (...) {
+		} catch (...) {
 			throw std::bad_alloc();
 		}
 	}
@@ -101,8 +95,7 @@ extern "C" {
 		try {
 			free(old);
 		} catch (...) {
-			if (nothrow_constant);
-			else
+			if (nothrow != nothrow_constant)
 				throw std::bad_alloc();
 		}
 	}
@@ -142,6 +135,7 @@ namespace std {
 		return "std::bad_array_new_length";
 	}
 
+	// TODO: Implement these functions :)
 	new_handler set_new_handler(new_handler new_p) noexcept {
 		
 	}
