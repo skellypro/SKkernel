@@ -12,22 +12,26 @@
 
 namespace sk {
 
-	void vga_out::putchar(register char c) {
+	[[fastcall]]
+	void vga_out::putchar(char c) {
 		if(!isNewLine(c))
 			putentry(c);
 	}
 
-	void vga_out::putentry(register char c) {
+	[[fastcall]]
+	void vga_out::putentry(char c) {
 		touch(pos.i, c);
 		pos++;
 	}
 
-	void vga_out::write(register const char* data, size_t size) {
-		for (register size_t i = 0; i < size; i++)
+	[[fastcall]]
+	void vga_out::write(const char* data, size_t size) {
+		for (size_t i = 0; i < size; i++)
 			this.putchar(data[i]);
 	}
 
-	void vga_out::writestring(register const char* data) {
+	[[fastcall]]
+	void vga_out::writestring(const char* data) {
 		write(data, strlen(data));
 	}
 

@@ -12,8 +12,8 @@ namespace sk {
 
 	//TODO double check this to make sure that touch call is right
 	void vga_out::scroll(void) {
-		const register position CONDITION = position(pos.Width() - 1, pos.Height() - 2);
-		for(register position i = position();
+		const position CONDITION = position(pos.Width() - 1, pos.Height() - 2);
+		for(position i = position();
 				i < CONDITION;
 				i++) {
 			touch(i.i, BUFFER[position(i.X(), i.Y() + 1).i].uc);

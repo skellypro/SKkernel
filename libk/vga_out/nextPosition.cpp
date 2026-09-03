@@ -35,7 +35,7 @@ namespace sk {
 	}
 	*/
 
-	vga_out::position & vga_out::position::operator ++(register int incr = 1){
+	vga_out::position & vga_out::position::operator ++int incr = 1){
 		y = (x + incr <= height && y < height - 1) ? y + 1 : y;
 		x = (x + incr) % width;//maybe this instead of the next line? maybe some variant of it?
 		//p.x = p.x < width - 1 ? p.x + 1 : 0;
@@ -43,7 +43,7 @@ namespace sk {
 		return (position&)this;
 	}
 
-	vga_out::position & vga_out::position::operator --(register int incr = 1){
+	vga_out::position & vga_out::position::operator --(int incr = 1){
 		x = (x <= 0) ? (width - 1) - (x - incr) : x - incr;
 		if(x == width - 1)
 			if(y == 0)

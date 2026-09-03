@@ -18,21 +18,21 @@ namespace sk{
 
 	class vga_out : basic_tty_out {
 	public:
-		vga_out(register uint8_t	newFG = VGA_COLOR_LIGHT_GREY,
-				register uint8_t		newBG = VGA_COLOR_BLACK);
+		vga_out(uint8_t	newFG = VGA_COLOR_LIGHT_GREY,
+				uint8_t		newBG = VGA_COLOR_BLACK);
 
 		~vga_out();
 
 		// Character output
-		void putchar(register char);
-		void putchar(register unsigned char);
+		[[fastcall]] void putchar(char);
+		[[fastcall]] void putchar(unsigned char);
 
 		// String output
-		void puts(register const char *);
+		[[fastcall]] void puts(const char *);
 
 		// Data Manipulation
-		void setColor(register uint8_t	arg_d,
-				register uint8_t			newColor);
+		[[fastcall]] void setColor(uint8_t	arg_d,
+				uint8_t	newColor);
 
 		void backSpace(void);
 
@@ -51,48 +51,47 @@ namespace sk{
 			public:
 				size_t i;
 
-				constexpr position(register size_t	newx = 0,
-						register size_t	newy = 0)
+				position(size_t	newx = 0,
+						size_t	newy = 0)
 				: width(VGA_WIDTH), height(VGA_HEIGHT), x(newx), y(newy) {
 					toIndex();
 				}
 
-				constexpr position(const position &	p)
+				position(const position &	p)
 				:width(VGA_WIDTH), height(VGA_HEIGHT), x(p.x), y(p.y) {
 					toIndex();
 				}
 
-				constexpr ~position() {
+				~position() {
 					x = y = i = width = height = 0;
 				}
 
-				constexpr void setX(register size_t newX) {
+				[[always_inline]] void setX(size_t newX) {
 					x = newX;
 					toIndex();
 				}
 
-				constexpr void setY(register size_t newY) {
+				[[always_inline]] void setY(size_t newY) {
 					y = newY;
 					toIndex();
 				}
 
-				constexpr void toIndex() {
+				[[always_inline]] void toIndex() {
 					i = x * width + y;
 				}
 
-				position & operator ++(register int incr = 1);
-				position & operator --(register int incr = 1);
+				position & operator ++(int incr = 1);
+				position & operator --(int incr = 1);
 
-				__attribute__((always_inline))
-				inline bool operator <(const basic_position & p) {
+				[[always_inline]] bool operator <(const basic_position & p) {
 					return (sizeof(&p) == sizeof(position)) && i <  ((position &)p).i;
 					//return (y < p.y && x < p.x);
 				};
 
-				__attribute__((always_inline))
-				inline bool operator >(const basic_position & p) {
+				[[always_inline]] bool operator >(const basic_position & p) {
 					return (sizeof(&p) == sizeof(position)) && i > ((position &)p).i;
 				}
+
 			} pos;
 
 		//TODO: implement this for vga entries
@@ -104,11 +103,11 @@ namespace sk{
 				unsigned fg : 4,
 					bg : 4;
 			};
-		}__attribute__((packed));
+		}[[gnu::packed]];
 
-		void initialize(register vga_color newFG, register vga_color newBG);
+		[[fastcall]] void initialize(vga_color newFG, vga_color newBG);
 
-		bool isNewLine(register char	c);
+		[[fastcall]] bool isNewLine(char	c);
 
 		void carriageReturn(void);
 
@@ -116,17 +115,17 @@ namespace sk{
 
 		void deleteLastLine(void);
 
-		void deleteIndex(register const position &	p);
+		[[fastcall]] void deleteIndex(const position &	p);
 
-		void putentry(register char c);
+		[[fastcall]] void putentry(char c);
 
-		void write(register const char*	data,
-				register size_t 			size);
+		[[fastcall]] void write(const char*	data,
+				size_t	size);
 
-		void writestring(register const char *	data);
+		[[fastcall]] void writestring(const char *	data);
 
-		void touch(register size_t	i,
-				register char		entry);
+		[[fastcall]] void touch(size_t	i,
+				char	entry);
 
 		void refresh();
 	};

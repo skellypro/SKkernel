@@ -41,7 +41,8 @@ namespace sk {
 	 *
 	 * The function returns no value
 	 */
-	void vga_out::setColor(register uint8_t arg_d, register uint8_t newColor) {
+	[[fastcall]]
+	void vga_out::setColor(uint8_t arg_d, uint8_t newColor) {
 		switch (arg_d) {
 		case 0:
 			bg = newColor;

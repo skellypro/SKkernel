@@ -13,8 +13,8 @@
 
 namespace sk {
 
-	vga_out::vga_out(register uint8_t	newFG = VGA_COLOR_LIGHT_GREY,
-					register uint8_t		newBG = VGA_COLOR_BLACK)
+	vga_out::vga_out(uint8_t	newFG = VGA_COLOR_LIGHT_GREY,
+					uint8_t		newBG = VGA_COLOR_BLACK)
 	: pos(position()) {
 		initialize((vga_color)newFG, (vga_color)newBG);
 	}
@@ -23,7 +23,8 @@ namespace sk {
 		clear();
 	}
 
-	void vga_out::puts(register const char *	s) {
+	[[fastcall]]
+	void vga_out::puts(const char *	s) {
 		writestring(s);
 	}
 
@@ -33,19 +34,20 @@ namespace sk {
 
 	//TODO rewrite this so it works.
 	void vga_out::clear(void) {
-		register const position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
-		for(register position i = pos = position();
+		const position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
+		for(position i = pos = position();
 				i < CONDITION;
 				i++)
 			deleteIndex(i);
 		pos = position(VGA_WIDTH, VGA_HEIGHT);
 	}
 
-	void vga_out::initialize(register vga_color newFG, register vga_color newBG) {
+	[[fastcall]]
+	void vga_out::initialize(vga_color newFG, vga_color newBG) {
 		fg = newFG;
 		bg = newBG;
-		const register position CONDITION = position(pos.Width() - 1, pos.Width() - 1);
-		for(register position i = position();
+		const position CONDITION = position(pos.Width() - 1, pos.Width() - 1);
+		for(position i = position();
 				i < CONDITION;
 				i++){
 			BUFFER[i].color = color;
@@ -67,7 +69,8 @@ namespace sk {
 	}
 
 	//TODO
-	bool vga_out::isNewLine(register char	c) {
+	[[fastcall]]
+	bool vga_out::isNewLine(char	c) {
 		if(c == '\n'){
 			touch(pos.i, c);
 			carriageReturn();
@@ -77,19 +80,21 @@ namespace sk {
 	}
 
 	void vga_out::deleteLastLine(void) {
-		const register position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
-		for(register position i = position(0, pos.height - 1);
+		const position CONDITION = position(pos.Width() - 1, pos.Height() - 1);
+		for(position i = position(0, pos.height - 1);
 				i < CONDITION;
 				i++)
 			deleteIndex(i);
 	}
 
-	void vga_out::deleteIndex(register const position &	p) {
+	[[fastcall]]
+	void vga_out::deleteIndex(const position &	p) {
 		touch(p.i, '\0');
 	}
 
-	void vga_out::touch(register size_t	i,
-						register char	entry) {
+	[[fastcall]]
+	void vga_out::touch(size_t	i,
+						char	entry) {
 		BUFFER[i].uc = (unsigned char)entry;
 	}
 
